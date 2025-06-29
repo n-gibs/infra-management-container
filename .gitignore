@@ -1,0 +1,94 @@
+# Environment Configuration
+.env
+!.env-example
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+terraform.tfplan
+terraform.tfplan.*
+.terraformrc
+terraform.rc
+crash.log
+crash.*.log
+
+# Ansible
+*.retry
+.vault_pass
+vault_password_file
+.ansible/
+host_vars/
+group_vars/
+collections/
+roles/*/tests/test.yml
+
+# AWS
+.aws/
+aws-cli/
+.boto
+
+# SSH Keys
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+known_hosts
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+.tmp/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Python (if any Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Test outputs and artifacts
+test-results/
+coverage/
+.coverage
+htmlcov/
+
+# Local development artifacts
+.local/
+dev_*
+debug_*
