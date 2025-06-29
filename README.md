@@ -22,7 +22,7 @@ n-gibs/infra-management-container/
 ├── entrypoint.sh            # Container startup script
 ├── Makefile                 # Build and publish commands
 ├── CHANGELOG.md             # Version history
-├── testing/                # Development testing examples
+├── examples/                # Development testing examples
 │   ├── terraform/
 │   └── ansible/
 └── README.md               # This file
@@ -257,7 +257,7 @@ git push origin v1.1.0
 ```
 
 ### Release Notes Template
-```markdown
+
 ## Infrastructure Container v1.1.0
 
 ### 🔧 Tool Updates
@@ -283,7 +283,6 @@ None
 ```bash
 docker-compose pull  # Get latest container
 make status          # Verify versions
-```
 ```
 
 ## 🔐 Security Considerations
