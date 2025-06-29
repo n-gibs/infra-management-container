@@ -1,0 +1,85 @@
+---
+# Local Ansible Playbook for Testing
+# This runs entirely on localhost without requiring external hosts
+
+- name: Infrastructure Container Demo Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+
+  vars:
+    demo_dir: /tmp/ansible-demo
+    app_name: infra-container-demo
+
+  tasks:
+    - name: Display welcome message
+      debug:
+        msg: "Welcome to the Infrastructure Container Ansible Demo!"
+
+    - name: Show system information
+      debug:
+        msg:
+          - "Hostname: {{ ansible_hostname }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Python: {{ ansible_python_version }}"
+          - "User: {{ ansible_user_id }}"
+
+    - name: Create demo directory structure
+      file:
+        path: "{{ demo_dir }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - config
+        - logs
+        - data
+
+    - name: Generate configuration file
+      copy:
+        content: |
+          # Application Configuration
+          app_name: {{ app_name }}
+          version: 1.0.0
+          environment: demo
+          generated_at: {{ ansible_date_time.iso8601 }}
+          features:
+            - monitoring
+            - logging
+            - alerting
+        dest: "{{ demo_dir }}/config/app.yml"
+
+    - name: Create a sample log file
+      lineinfile:
+        path: "{{ demo_dir }}/logs/app.log"
+        line: "{{ ansible_date_time.iso8601 }} - Application {{ app_name }} initialized"
+        create: yes
+
+    - name: Simulate deployment tasks
+      debug:
+        msg: "Simulating {{ item }}..."
+      loop:
+        - "health checks"
+        - "configuration validation"
+        - "service startup"
+      tags: deployment
+
+    - name: Create JSON report
+      copy:
+        content: "{{ report | to_nice_json }}"
+        dest: "{{ demo_dir }}/deployment-report.json"
+      vars:
+        report:
+          status: "success"
+          timestamp: "{{ ansible_date_time.iso8601 }}"
+          environment:
+            hostname: "{{ ansible_hostname }}"
+            platform: "{{ ansible_system }}"
+          deployment:
+            app_name: "{{ app_name }}"
+            tasks_completed: 6
+
+    - name: Display completion message
+      debug:
+        msg:
+          - "✅ Ansible demo completed successfully!"
+          - "📁 Check out the results in {{ demo_dir }}"

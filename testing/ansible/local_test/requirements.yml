@@ -1,0 +1,7 @@
+---
+# Ansible Galaxy requirements
+# These are just examples - the playbook works without them
+
+collections:
+  - name: community.general
+    version: ">=3.3.0"
