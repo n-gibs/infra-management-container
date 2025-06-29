@@ -1,0 +1,20 @@
+services:
+  infra-management:
+    platform: linux/amd64
+    build:
+      context: .
+      args:
+        - ANSIBLE_VERSION=${ANSIBLE_VERSION}
+        - TERRAFORM_VERSION=${TERRAFORM_VERSION}
+        - AWS_CLI_VERSION=${AWS_CLI_VERSION}
+    container_name: infra-tools
+    volumes:
+      - ${TERRAFORM_PATH:-./testing/terraform}:/workspace/terraform
+      - ${ANSIBLE_PATH:-./testing/ansible}:/workspace/ansible
+      - ~/.aws:/home/infra/.aws:ro
+      - ~/.ssh:/home/infra/.ssh:ro
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-default}
+    stdin_open: true
+    tty: true
+    command: /bin/bash
