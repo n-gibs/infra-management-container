@@ -76,20 +76,32 @@ AWS_CLI_VERSION=2.27.45     # No change
 # Clean build with new versions
 make build-clean
 
+# Start container for testing
+make up
+
 # Verify tools work
 make shell
+# Inside container:
 terraform version
 ansible --version
 aws --version
 
 # Run validation tests
 make test
+
+# Stop container
+make down
 ```
 
 ### 4. Test with Real Examples
 
 ```bash
+# Start container
+make up
+
 # Test Terraform example
+make shell
+# Inside container:
 cd terraform
 terraform init
 terraform validate
@@ -99,6 +111,10 @@ terraform plan
 cd ../ansible
 ansible-playbook --syntax-check site.yml
 ansible-lint .
+
+# Exit container and stop
+exit
+make down
 ```
 
 ### 5. Update Documentation
@@ -125,7 +141,7 @@ make login
 # Update version tag
 export VERSION=v1.1.0
 
-# Build and push
+# Build and push multi-platform
 make publish
 
 # Verify published image
@@ -170,7 +186,7 @@ For critical security vulnerabilities:
 # Update versions.env with patched versions
 # Skip extensive testing for critical patches
 make build-clean
-make test  # Quick validation only
+make dev-test  # Quick validation only
 
 # Emergency publish
 make publish
@@ -311,7 +327,7 @@ make status          # Verify versions
 vim versions.env
 
 # 2. Test thoroughly
-make build-clean && make test
+make dev-test
 
 # 3. Update docs
 vim CHANGELOG.md
@@ -321,7 +337,7 @@ git add . && git commit -m "Release v1.1.0"
 git tag v1.1.0
 
 # 5. Publish to Docker Hub
-make login && make publish
+make prod-publish
 
 # 6. Push to GitHub
 git push origin main --tags

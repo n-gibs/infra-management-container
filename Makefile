@@ -104,20 +104,12 @@ dev-test: ## Complete development test workflow
 
 status: ## Show container status and tool versions
 	@echo "=== Container Status ==="
-	docker-compose ps
+	docker-compose --env-file versions.env ps
 	@echo ""
 	@echo "=== Tool Versions ==="
 	docker-compose --env-file versions.env exec infra-management terraform version || echo "Container not running"
 	docker-compose --env-file versions.env exec infra-management ansible --version || echo "Container not running"
 	docker-compose --env-file versions.env exec infra-management aws --version || echo "Container not running"
-
-# Verification and inspection
-inspect: ## Inspect published image platforms
-	@echo "=== Published Image Platforms ==="
-	@docker buildx imagetools inspect $(IMAGE_NAME):$(VERSION) 2>/dev/null || echo "Image not found on Docker Hub"
-	@echo ""
-	@echo "=== Local Image Info ==="
-	@docker image inspect $(IMAGE_NAME):$(VERSION) --format 'Architecture: {{.Architecture}}, OS: {{.Os}}' 2>/dev/null || echo "No local image found"
 
 # Cleanup
 clean: ## Remove local Docker images and containers
