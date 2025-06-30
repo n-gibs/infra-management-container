@@ -13,6 +13,7 @@ FROM ubuntu:${UBUNTU_VERSION} AS downloader
 
 ARG TERRAFORM_VERSION
 ARG AWS_CLI_VERSION
+ARG TARGETARCH
 
 # Install only essential download dependencies
 RUN apt-get update && apt-get install -y \
@@ -25,14 +26,24 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /downloads
 
-# Download Terraform
-RUN wget -q "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+# Download Terraform with architecture detection
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+        TERRAFORM_ARCH="arm64"; \
+    else \
+        TERRAFORM_ARCH="amd64"; \
+    fi && \
+    wget -q "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TERRAFORM_ARCH}.zip" \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_${TERRAFORM_ARCH}.zip \
     && chmod +x terraform \
-    && rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+    && rm terraform_${TERRAFORM_VERSION}_linux_${TERRAFORM_ARCH}.zip
 
-# Download AWS CLI
-RUN curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o awscliv2.zip \
+# Download AWS CLI with architecture detection
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+        AWS_ARCH="aarch64"; \
+    else \
+        AWS_ARCH="x86_64"; \
+    fi && \
+    curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-${AWS_ARCH}-${AWS_CLI_VERSION}.zip" -o awscliv2.zip \
     && unzip -q awscliv2.zip \
     && rm awscliv2.zip
 

@@ -1,6 +1,5 @@
 services:
   infra-management:
-    platform: linux/amd64
     build:
       context: .
       args:
